@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, FlatList, Pressable, StyleSheet } from 'react-native';
 import store from '../redux/store';
 import { setUser, addJob, deleteJob, updateJob } from '../redux/action';
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 
 const URL = 'https://650663f03a38daf4803e724d.mockapi.io/phamducnhan/Nhan';
 const Screen2 = ({ route }) => {
@@ -11,6 +11,8 @@ const Screen2 = ({ route }) => {
     const [nameJob, setNameJob] = useState('');
     const [data, setData] = useState([]);
     const dispatch = useDispatch();
+    const userData = useSelector((state) => state?.job);
+    console.log('userData',userData);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -19,10 +21,6 @@ const Screen2 = ({ route }) => {
         };
         fetchData();
     }, [route.params.user]);
-    useEffect(() => {
-        setData(store.getState());
-    }, [store.getState()]);
-
     const handleAdd = () => {
         dispatch(addJob(nameJob));
         console.log(nameJob)
@@ -30,18 +28,11 @@ const Screen2 = ({ route }) => {
     };
 
     const handleDelete = (id) => {
-        const updatedData = data.job.filter((item) => item.id !== id);
-        setData(updatedData);
         dispatch(deleteJob(id));
     };
     const handleUpdate = () => {
         if (selectedJob) {
             store.dispatch(updateJob(selectedJob.id, nameJob));
-            const updatedData = data.job.map((item) =>
-                item.id === selectedJob.id ? { ...item, name: nameJob } : item
-            );
-            setData(updatedData);
-            console.log(updatedData);
             setSelectedJob(null);
             setNameJob('');
         }
@@ -89,7 +80,7 @@ const Screen2 = ({ route }) => {
             </Pressable>
             <Text style={styles.listHeader}>LIST JOB</Text>
             <FlatList
-                data={data.job}
+                data={userData}
                 renderItem={({ item }) => (
                     <View style={styles.itemContainer}>
                         <Pressable onPress={() => handleSelect(item)}>

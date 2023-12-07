@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Pressable, View, TextInput, StyleSheet, Text, Alert } from 'react-native';
-
 const URL = 'https://650663f03a38daf4803e724d.mockapi.io/phamducnhan/Nhan';
-
 export default function Screen1({ navigation }) {
   const [data, setData] = useState([]);
   useEffect(() => {
@@ -37,7 +35,6 @@ export default function Screen1({ navigation }) {
           user: user,
         },
       });
-    //   console.log(user);
     } else {
       Alert.alert('Invalid Credentials', 'Please check your email and password.');
     }
